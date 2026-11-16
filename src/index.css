@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+/* Uses the system font stack; no external font download is required. */
 
 @layer base {
   * {
@@ -6145,4 +6145,182 @@ nav button em {
   .login-brand-copy {
     display: none
   }
+}
+
+/* COPC visual refinement
+   Background image: public/assets/images/login-background.jpg
+   University seal: public/assets/branding/msu-naawan-seal.svg
+   Keep public assets in these folders so the backend never needs to serve source imports. */
+:root {
+  --navy: #082f62;
+  --blue: #1764a8;
+  --canvas: #f4f7fb;
+  --line: #e7edf4;
+  --muted: #68798d;
+  --ink: #172b43;
+  --green: #16865b;
+  --red: #c94450;
+  --amber: #b77916;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: normal;
+  color: var(--ink);
+  background: var(--canvas);
+}
+
+h1, h2, h3, h4, p, label, button, input, select, textarea {
+  letter-spacing: normal;
+}
+
+h1, h2, h3 { font-style: normal; }
+
+.page-head h1 {
+  letter-spacing: normal;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.page-head p,
+.header-title span,
+.program-card span,
+.eyebrow,
+.date span {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.eyebrow { display: none !important; }
+
+.compact-login {
+  background-color: #eaf1f8;
+  background-image: url("/assets/images/login-background.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.compact-login-overlay {
+  background: rgba(8, 47, 98, .10);
+}
+
+.compact-login-card {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 18px 54px rgba(8, 35, 69, .14);
+}
+
+.card,
+.stat {
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(19, 45, 76, .045);
+}
+
+.card { overflow: hidden; }
+
+.stat { padding: 18px; }
+
+.program-card,
+.sidebar-help {
+  border: 0;
+  border-radius: 10px;
+}
+
+.badge,
+.tag,
+.pill,
+nav em {
+  border-radius: 6px;
+  font-style: normal;
+  letter-spacing: normal;
+}
+
+.section-head { margin-bottom: 18px; }
+
+.section-head h2,
+.card > h2 {
+  letter-spacing: normal;
+  font-weight: 650;
+}
+
+input,
+select,
+textarea {
+  border-color: #d6e0eb;
+  border-radius: 8px;
+  min-height: 42px;
+}
+
+textarea { line-height: 1.5; }
+
+input::placeholder,
+textarea::placeholder {
+  color: transparent;
+}
+
+button { font-weight: 600; }
+
+.btn,
+.compact-signin {
+  border-radius: 8px;
+  min-height: 42px;
+}
+
+.btn.primary,
+.compact-signin {
+  background: #125b9f;
+}
+
+.btn.primary:hover,
+.compact-signin:hover {
+  background: #0d4d89;
+}
+
+.app > header {
+  box-shadow: 0 1px 8px rgba(8, 35, 69, .10);
+}
+
+aside {
+  border-right: 0;
+  box-shadow: 1px 0 12px rgba(19, 45, 76, .035);
+}
+
+nav button.active {
+  box-shadow: none;
+  border-radius: 8px;
+}
+
+.notification,
+.notice-row {
+  border-bottom-color: #edf1f5;
+}
+
+.modal {
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 24px 72px rgba(8, 35, 69, .22);
+}
+
+.toast {
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(8, 35, 69, .16);
+}
+
+.seal {
+  /* Replace the text monogram in Seal() with an img using
+     /assets/branding/msu-naawan-seal.svg when the official logo is available. */
+  flex: 0 0 auto;
+}
+
+@media (max-width: 900px) {
+  .compact-login {
+    background-position: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }

@@ -1,184 +1,218 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* COPC motion system
+   Page changes, dialogs, feedback, controls and data surfaces use short, purposeful motion.
+   Keep this file imported by App.jsx. */
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
+:root {
+  --copc-ease-out: cubic-bezier(.16, 1, .3, 1);
+  --copc-ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --copc-ease-spring: cubic-bezier(.2, 1.35, .4, 1);
+  --copc-fast: 150ms;
+  --copc-medium: 240ms;
+  --copc-slow: 440ms;
+}
+
+@keyframes copc-page-in {
+  0% { opacity: 0; transform: translate3d(0, 15px, 0) scale(.992); filter: blur(2px); }
+  65% { opacity: 1; filter: blur(0); }
+  82% { transform: translate3d(0, -2px, 0) scale(1.002); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+}
+@keyframes copc-card-in {
+  0% { opacity: 0; transform: translate3d(0, 13px, 0) scale(.985); }
+  70% { opacity: 1; transform: translate3d(0, -2px, 0) scale(1.004); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes copc-modal-in {
+  0% { opacity: 0; transform: translate3d(0, 22px, 0) scale(.94); }
+  58% { opacity: 1; transform: translate3d(0, -3px, 0) scale(1.018); }
+  78% { transform: translate3d(0, 1px, 0) scale(.995); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes copc-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes copc-toast-in {
+  0% { opacity: 0; transform: translate3d(0, 18px, 0) scale(.94); }
+  65% { opacity: 1; transform: translate3d(0, -3px, 0) scale(1.015); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes copc-squash {
+  0% { transform: scale(1); }
+  38% { transform: scale(1.045, .94); }
+  68% { transform: scale(.985, 1.025); }
+  100% { transform: scale(1); }
+}
+@keyframes copc-fade-up { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes copc-ring-draw { from { transform: rotate(-90deg) scale(.92); opacity: .45; } to { transform: rotate(0) scale(1); opacity: 1; } }
+@keyframes copc-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(18, 91, 159, 0); } 50% { box-shadow: 0 0 0 5px rgba(18, 91, 159, .09); } }
+
+/* The keyed page-view wrapper is remounted on every navigation, so this reliably replays. */
+.page-view { min-width: 0; animation: copc-page-in 480ms var(--copc-ease-out) both; transform-origin: 50% 15%; }
+.page-view > .page-head { animation: copc-fade-up 420ms var(--copc-ease-out) both; }
+.page-view .card,
+.page-view .stat,
+.page-view .record-summary > div,
+.page-view .dashboard-grid > *,
+.page-view .requirements-grid > *,
+.page-view .settings-grid > * {
+  animation: copc-card-in 520ms var(--copc-ease-out) both;
+}
+.page-view .dashboard-grid > *:nth-child(2),
+.page-view .requirements-grid > *:nth-child(2),
+.page-view .settings-grid > *:nth-child(2) { animation-delay: 65ms; }
+.page-view .dashboard-grid > *:nth-child(3),
+.page-view .requirements-grid > *:nth-child(3),
+.page-view .settings-grid > *:nth-child(3) { animation-delay: 110ms; }
+.page-view tbody tr { animation: copc-fade-up 300ms var(--copc-ease-out) both; }
+.page-view tbody tr:nth-child(2) { animation-delay: 35ms; }
+.page-view tbody tr:nth-child(3) { animation-delay: 70ms; }
+.page-view tbody tr:nth-child(4) { animation-delay: 105ms; }
+
+/* Login screen */
+.compact-login { animation: copc-page-in 650ms var(--copc-ease-out) both; }
+.compact-login-card { animation: copc-modal-in 680ms var(--copc-ease-spring) both; }
+.compact-signin:hover:not(:disabled) span { display: inline-block; transform: translateX(4px); transition: transform 180ms var(--copc-ease-out); }
+
+/* Dialogs and transient feedback */
+.modal-backdrop { animation: copc-backdrop-in 180ms ease-out both; }
+.modal { animation: copc-modal-in 420ms var(--copc-ease-spring) both; transform-origin: center; }
+.toast { animation: copc-toast-in 420ms var(--copc-ease-spring) both; }
+.notifications, .profile-menu, .filter-popover { animation: copc-fade-up 220ms var(--copc-ease-out) both; transform-origin: top right; }
+
+/* Responsive tactile feedback */
+button, [role="button"], a, input, select, textarea, .clickable-row {
+  transition: color var(--copc-fast) ease, background-color var(--copc-fast) ease,
+    border-color var(--copc-fast) ease, box-shadow var(--copc-medium) var(--copc-ease-out),
+    transform var(--copc-medium) var(--copc-ease-out);
+}
+button:not(:disabled):active, [role="button"]:active { transform: translateY(1px) scale(.975); }
+.btn:hover:not(:disabled), .compact-signin:hover:not(:disabled) { transform: translateY(-2px); }
+.btn:active:not(:disabled), .compact-signin:active:not(:disabled) { transform: translateY(0) scale(.975); }
+nav button:hover:not(.active) { transform: translateX(3px); }
+.clickable-row:hover { transform: translateX(2px); }
+.card, .stat { transition: transform 260ms var(--copc-ease-out), box-shadow 260ms var(--copc-ease-out); }
+.card:hover { box-shadow: 0 12px 28px rgba(15, 38, 67, .075); }
+.stat:hover { transform: translateY(-3px); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid rgba(18, 91, 159, .24); outline-offset: 2px;
+}
+
+/* Progress indicator and notification feedback */
+.ring { animation: copc-ring-draw 850ms var(--copc-ease-out) both; }
+.bell:has(i), .notification-bell:has(i) { animation: copc-pulse 1.8s ease-in-out 2; }
+.badge, .status, .tag, .pill { font-style: normal; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
   }
 }
 
-.hero {
+/* Login layout correction
+   The original stylesheet positions the card absolutely. Reset those properties
+   before using the two-column layout so grid and the entrance animation agree. */
+.compact-login {
   position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
-}
-
-#center {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
-}
-
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 460px);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(36px, 7vw, 104px);
   width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  height: auto;
+  box-sizing: border-box;
+  padding: clamp(28px, 5vh, 48px) clamp(32px, 7.1vw, 100px);
+  overflow-x: clip;
+  overflow-y: auto;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+.compact-login-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.compact-login-card {
+  position: relative;
+  inset: auto;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: stretch;
+  align-self: center;
+  z-index: 2;
+  width: 100%;
+  max-width: 460px;
+  min-width: 0;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  box-sizing: border-box;
+  padding: clamp(24px, 3.2vh, 32px) clamp(24px, 3vw, 36px);
+  overflow: visible;
+  transform-origin: center;
+  translate: 0 -270px;
+}
+
+.login-brand-copy {
+  position: relative;
+  inset: auto;
+  top: auto;
+  left: auto;
+  right: auto;
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  justify-self: start;
+  z-index: 1;
+  width: 100%;
+  max-width: 570px;
+  margin: 0;
+  transform: none;
+}
+
+.compact-institution { margin-bottom: 18px; }
+.compact-login-heading { margin-bottom: 18px; }
+.compact-login-card form > label { margin: 10px 0 5px; }
+.compact-login-options { margin: 13px 0 16px; }
+.demo-disclaimer { margin-top: 12px; }
+
+@media (max-width: 900px) {
+  .compact-login {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 28px 18px;
   }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+  .compact-login-card {
+    position: relative;
+    inset: auto;
+    width: min(460px, 100%);
+    max-width: 100%;
+    min-height: 0;
+    margin: 0 auto;
+    padding: 26px 24px;
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
+
+  .login-brand-copy { display: none; }
+}
+
+@media (max-height: 720px) and (min-width: 901px) {
+  .compact-login { padding-top: 18px; padding-bottom: 18px; }
+  .compact-login-card { padding-top: 18px; padding-bottom: 18px; }
+  .compact-institution { margin-bottom: 12px; }
+  .compact-login-heading { margin-bottom: 12px; }
+  .compact-login-heading h1 { font-size: 26px; }
+  .compact-login-options { margin: 10px 0 12px; }
+  .demo-disclaimer { margin-top: 9px; }
 }
